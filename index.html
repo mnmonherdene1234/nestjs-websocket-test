@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Websocket</title>
+  </head>
+  <body>
+    <div>
+      <ul id="messages"></ul>
+    </div>
+    <div>
+      <input id="message" type="text" />
+      <button onclick="handleSubmit()">Submit</button>
+    </div>
+    <script
+      src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+      integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      const socket = io('http://localhost:3000');
+
+      const message = document.getElementById('message');
+      const messages = document.getElementById('messages');
+
+      const handleSubmit = () => {
+        socket.emit('handleMessage', { data: message.value });
+        message.value = "";
+      };
+
+      socket.on('messages', ({ data }) => {
+        handleNewMessage(data);
+      });
+
+      const handleNewMessage = (message) => {
+        messages.appendChild(buildNewMessage(message));
+      };
+
+      const buildNewMessage = (message) => {
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(message));
+        return li;
+      };
+    </script>
+  </body>
+</html>
